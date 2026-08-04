@@ -1,0 +1,30 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "Title": "Imaging Memory Limits (ImageSharp)",
+  "Description": "Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section. ImageSharp decodes each source image at full resolution before resizing, and concurrent thumbnail requests are not bounded, so peak memory is the number of images being processed at once multiplied by the decoded source size. This package caps both the unmanaged buffer pool ImageSharp retains between requests and how many images are processed concurrently, deriving both from the memory available to the process. It is a backport of the fix proposed for the CMS in umbraco/Umbraco-CMS#23557, for Umbraco 17 sites that need it before it ships in the product.",
+  "Category": "Developer Tools",
+  "AlternateCategory": "Editor Tools",
+  "PackageType": "Package",
+  "LicenseTypes": [
+    "Free"
+  ],
+  "AuthorDetails": {
+    "Name": "Aaron Sadler",
+    "Url": "https://github.com/AaronSadlerUK",
+    "SyncContributorsFromRepository": true
+  },
+  "DocumentationUrl": "https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp#readme",
+  "IssueTrackerUrl": "https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp/issues",
+  "LookingForContributors": false,
+  "LookingForMaintainer": false,
+  "VersionDependencyMode": "Default",
+  "Tags": [
+    "imagesharp",
+    "imaging",
+    "media",
+    "memory",
+    "performance",
+    "docker",
+    "containers"
+  ]
+}

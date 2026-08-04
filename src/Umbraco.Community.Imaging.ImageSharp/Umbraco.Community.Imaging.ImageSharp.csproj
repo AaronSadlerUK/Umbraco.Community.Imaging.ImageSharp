@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!--
+      Audit our own direct dependencies only. Building against the floor of the supported Umbraco
+      range (17.0.0) drags in that release's transitive graph, whose advisories are fixed in later
+      17.x releases and are governed by whichever Umbraco version the consuming site restores.
+    -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Umbraco.Community.Imaging.ImageSharp</PackageId>
+    <Title>Umbraco Community Imaging (ImageSharp) — memory limits</Title>
+    <Description>Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section. Caps the unmanaged buffer pool ImageSharp retains and bounds how many images are processed concurrently, both derived from the memory available to the process. Backport of the fix proposed in umbraco/Umbraco-CMS#23557 for Umbraco 17 sites that need it now.</Description>
+    <Authors>Aaron Sadler</Authors>
+    <Company>Aaron Sadler</Company>
+    <Product>Umbraco.Community.Imaging.ImageSharp</Product>
+    <Copyright>Copyright © Aaron Sadler</Copyright>
+    <PackageTags>umbraco umbraco-marketplace imagesharp imaging media memory docker container oom performance</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>See https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp/releases</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../LICENSE" Pack="true" PackagePath="\" />
+    <None Include="../../assets/icon.png" Pack="true" PackagePath="\" />
+    <!-- Picked up by the Umbraco Marketplace when the package is indexed. -->
+    <None Include="../../umbraco-marketplace.json" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Lowest supported version; the host site's own Umbraco version wins at restore. -->
+    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp" Version="[17.0.0, 18.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Umbraco.Community.Imaging.ImageSharp.Tests" />
+  </ItemGroup>
+
+</Project>
