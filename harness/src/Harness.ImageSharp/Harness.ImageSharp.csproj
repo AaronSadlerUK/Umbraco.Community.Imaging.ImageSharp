@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>ImagingHarness</RootNamespace>
+    <AssemblyName>ImagingHarness</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The versions Umbraco 13, 17 and 18 ship with Umbraco.Cms.Imaging.ImageSharp. -->
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="SixLabors.ImageSharp.Web" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\*.cs" />
+  </ItemGroup>
+
+  <!--
+    The package's own sources, so the harness measures the shipped implementation rather than a
+    copy of it. Referencing the package project instead would drag in the whole CMS.
+  -->
+  <ItemGroup>
+    <Compile Include="..\..\..\src\Umbraco.Community.Imaging.ImageSharp\Configuration\ImagingMemorySettings.cs" Link="ImagingMemorySettings.cs" />
+    <Compile Include="..\..\..\src\Umbraco.Community.Imaging.ImageSharp\ImageProcessingThrottleMiddleware.cs" Link="ImageProcessingThrottleMiddleware.cs" />
+  </ItemGroup>
+
+</Project>

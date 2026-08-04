@@ -195,7 +195,20 @@ throttles nested inside each other, the inner of which never blocks.
 
 ## How this was verified
 
-The measurements above come from a reproduction harness: a minimal ASP.NET Core app configured
+**The harness is in this repository — see [`harness/`](harness/).** Every number quoted here can be
+re-run and checked:
+
+```bash
+cd harness
+./build.sh && ./generate-media.sh
+./run.sh baseline imaging-harness:imagesharp 512m 200 16                  # OOMKilled, exit 137
+./run.sh fixed    imaging-harness:imagesharp 512m 200 16 -e HARNESS_FIX=1 # survives
+```
+
+It compiles the package's own sources, so a run measures the shipped implementation rather than a
+re-creation of it.
+
+The measurements above come from that harness: a minimal ASP.NET Core app configured
 identically to `AddUmbracoImageSharp()` (`ClearProviders()`, `WebRootImageProvider`, Umbraco's
 `CropWebProcessor`, `ConfigureImageSharpMiddlewareOptions`, `PhysicalFileSystemCache`), running on
 `mcr.microsoft.com/dotnet/aspnet:10.0-noble` under cgroup v2 with ImageSharp 3.1.12 and

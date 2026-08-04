@@ -9,3 +9,7 @@ artifacts/
 *.nupkg
 *.snupkg
 TestResults/
+
+# Reproduction harness build output and measurement results
+harness/out/
+harness/results/

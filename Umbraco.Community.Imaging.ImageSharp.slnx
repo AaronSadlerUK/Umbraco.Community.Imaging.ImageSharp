@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/harness/" />
+  <Folder Name="/harness/src/">
+    <Project Path="harness/src/Harness.ImageSharp/Harness.ImageSharp.csproj" />
+    <Project Path="harness/src/Harness.ImageSharp2/Harness.ImageSharp2.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Umbraco.Community.Imaging.ImageSharp/Umbraco.Community.Imaging.ImageSharp.csproj" />
     <Project Path="src/Umbraco.Community.Imaging.ImageSharp2/Umbraco.Community.Imaging.ImageSharp2.csproj" />
