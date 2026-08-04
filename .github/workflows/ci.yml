@@ -32,7 +32,9 @@ jobs:
         run: dotnet test --configuration Release --no-build --verbosity normal
 
       - name: Pack
-        run: dotnet pack src/Umbraco.Community.Imaging.ImageSharp/Umbraco.Community.Imaging.ImageSharp.csproj --configuration Release --no-build --output artifacts
+        run: |
+          dotnet pack src/Umbraco.Community.Imaging.ImageSharp/Umbraco.Community.Imaging.ImageSharp.csproj --configuration Release --no-build --output artifacts
+          dotnet pack src/Umbraco.Community.Imaging.ImageSharp2/Umbraco.Community.Imaging.ImageSharp2.csproj --configuration Release --no-build --output artifacts
 
       - uses: actions/upload-artifact@v4
         with:

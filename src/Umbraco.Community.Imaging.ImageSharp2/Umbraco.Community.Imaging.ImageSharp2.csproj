@@ -9,22 +9,19 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <!--
-      Audit our own direct dependencies only. Building against the floor of the supported Umbraco
-      range (17.0.0) drags in that release's transitive graph, whose advisories are fixed in later
-      17.x releases and are governed by whichever Umbraco version the consuming site restores.
-    -->
+    <!-- See the sibling project for why the audit is scoped to direct dependencies. -->
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>direct</NuGetAuditMode>
+    <RootNamespace>Umbraco.Community.Imaging.ImageSharp</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Umbraco.Community.Imaging.ImageSharp</PackageId>
-    <Title>Umbraco Community Imaging (ImageSharp) — memory limits</Title>
-    <Description>Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section. Caps the unmanaged buffer pool ImageSharp retains and bounds how many images are processed concurrently, both derived from the memory available to the process. Backport of the fix proposed for the CMS in umbraco/Umbraco-CMS#23557, for Umbraco 13, 17 and 18 sites that need it now.</Description>
+    <PackageId>Umbraco.Community.Imaging.ImageSharp2</PackageId>
+    <Title>Umbraco Community Imaging (ImageSharp 2) — memory limits</Title>
+    <Description>Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section. This is the ImageSharp 2.x variant, for sites using Umbraco.Cms.Imaging.ImageSharp2; use Umbraco.Community.Imaging.ImageSharp for the default ImageSharp 3.x setup. Caps the unmanaged buffer pool ImageSharp retains and bounds how many images are processed concurrently, both derived from the memory available to the process.</Description>
     <Authors>Aaron Sadler</Authors>
     <Company>Aaron Sadler</Company>
-    <Product>Umbraco.Community.Imaging.ImageSharp</Product>
+    <Product>Umbraco.Community.Imaging.ImageSharp2</Product>
     <Copyright>Copyright © Aaron Sadler</Copyright>
     <PackageTags>umbraco umbraco-marketplace imagesharp imaging media memory docker container oom performance</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -46,21 +43,27 @@
     <None Include="../../README.md" Pack="true" PackagePath="\" />
     <None Include="../../LICENSE" Pack="true" PackagePath="\" />
     <None Include="../../assets/icon.png" Pack="true" PackagePath="\" />
-    <!-- Picked up by the Umbraco Marketplace when the package is indexed. -->
-    <None Include="../../umbraco-marketplace.json" Pack="true" PackagePath="\" />
+    <None Include="../../umbraco-marketplace.imagesharp2.json" Pack="true" PackagePath="\umbraco-marketplace.json" />
   </ItemGroup>
 
   <!--
-    Lowest supported version per major line; the host site's own Umbraco version wins at restore.
-    Umbraco 13 ships net8.0 assets, Umbraco 17 and 18 ship net10.0, and all three use
-    SixLabors.ImageSharp 3.x, so one implementation covers every target.
+    Shared with the ImageSharp 3.x package rather than copied. The implementation touches only
+    IImageWebProcessor.Commands, Configuration.Default.MemoryAllocator and MemoryAllocatorOptions,
+    all of which exist in both ImageSharp majors, so one set of sources serves both packages and
+    the two cannot drift.
   -->
+  <ItemGroup>
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp\Configuration\ImagingMemorySettings.cs" Link="Configuration\ImagingMemorySettings.cs" />
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp\ImageProcessingThrottleMiddleware.cs" Link="ImageProcessingThrottleMiddleware.cs" />
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp\ImagingMemoryComposer.cs" Link="ImagingMemoryComposer.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp" Version="[13.0.0, 14.0.0)" />
+    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp2" Version="[13.0.0, 14.0.0)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp" Version="[17.0.0, 19.0.0)" />
+    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp2" Version="[17.0.0, 19.0.0)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,7 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Umbraco.Community.Imaging.ImageSharp.Tests" />
+    <InternalsVisibleTo Include="Umbraco.Community.Imaging.ImageSharp2.Tests" />
   </ItemGroup>
 
 </Project>

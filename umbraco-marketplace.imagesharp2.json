@@ -1,0 +1,37 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "Title": "Imaging Memory Limits (ImageSharp 2)",
+  "Description": "Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section. This is the ImageSharp 2.x variant, for sites using the Umbraco.Cms.Imaging.ImageSharp2 package; use Umbraco.Community.Imaging.ImageSharp for the default ImageSharp 3.x setup. ImageSharp decodes each source image at full resolution before resizing, and concurrent thumbnail requests are not bounded, so peak memory is the number of images being processed at once multiplied by the decoded source size. This package caps both the unmanaged buffer pool ImageSharp retains between requests and how many images are processed concurrently, deriving both from the memory available to the process.",
+  "Category": "Developer Tools",
+  "AlternateCategory": "Editor Tools",
+  "PackageType": "Package",
+  "LicenseTypes": [
+    "Free"
+  ],
+  "IsSubPackageOf": "Umbraco.Community.Imaging.ImageSharp",
+  "AuthorDetails": {
+    "Name": "Aaron Sadler",
+    "Url": "https://github.com/AaronSadlerUK",
+    "SyncContributorsFromRepository": true
+  },
+  "DocumentationUrl": "https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp#imagesharp-2",
+  "IssueTrackerUrl": "https://github.com/AaronSadlerUK/Umbraco.Community.Imaging.ImageSharp/issues",
+  "RelatedPackages": [
+    {
+      "PackageId": "Umbraco.Community.Imaging.ImageSharp",
+      "Description": "The same fix for the default ImageSharp 3.x setup."
+    }
+  ],
+  "LookingForContributors": false,
+  "LookingForMaintainer": false,
+  "VersionDependencyMode": "Default",
+  "Tags": [
+    "imagesharp",
+    "imaging",
+    "media",
+    "memory",
+    "performance",
+    "docker",
+    "containers"
+  ]
+}

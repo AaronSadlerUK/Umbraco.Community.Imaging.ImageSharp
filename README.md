@@ -2,7 +2,8 @@
 
 Stops Umbraco sites being OOM-killed in memory-limited containers while browsing the media section.
 
-[![NuGet](https://img.shields.io/nuget/v/Umbraco.Community.Imaging.ImageSharp.svg)](https://www.nuget.org/packages/Umbraco.Community.Imaging.ImageSharp)
+[![NuGet](https://img.shields.io/nuget/v/Umbraco.Community.Imaging.ImageSharp.svg?label=ImageSharp)](https://www.nuget.org/packages/Umbraco.Community.Imaging.ImageSharp)
+[![NuGet](https://img.shields.io/nuget/v/Umbraco.Community.Imaging.ImageSharp2.svg?label=ImageSharp2)](https://www.nuget.org/packages/Umbraco.Community.Imaging.ImageSharp2)
 
 > This is a backport of the fix proposed for the CMS in
 > [umbraco/Umbraco-CMS#23557](https://github.com/umbraco/Umbraco-CMS/pull/23557)
@@ -96,11 +97,37 @@ because a cache hit takes milliseconds and never holds the gate.
 
 ## Installation
 
+Pick the package that matches the imaging package your site already uses:
+
 ```bash
+# Default setup (Umbraco.Cms.Imaging.ImageSharp — ImageSharp 3.x)
 dotnet add package Umbraco.Community.Imaging.ImageSharp
+
+# Only if your site uses Umbraco.Cms.Imaging.ImageSharp2 (ImageSharp 2.x)
+dotnet add package Umbraco.Community.Imaging.ImageSharp2
 ```
 
 That is all — the package composes itself. There is nothing to add to `Program.cs`.
+
+**Install one or the other, never both.** They carry the same types in the same namespace and depend
+on mutually exclusive ImageSharp majors, so referencing both fails at restore. That mirrors
+`Umbraco.Cms.Imaging.ImageSharp` and `Umbraco.Cms.Imaging.ImageSharp2` themselves.
+
+Configuration, behaviour and defaults are identical across the two — only the ImageSharp major
+differs, so you can switch packages without touching config.
+
+### ImageSharp 2
+
+`Umbraco.Community.Imaging.ImageSharp2` exists because ImageSharp 2.x has the same problem. Verified
+with the same harness, 512 MB limit, 16 concurrent distinct crops:
+
+| | ImageSharp 2 | ImageSharp 3 |
+|---|---|---|
+| without the package | **OOMKilled, exit 137** | OOMKilled, exit 137 |
+| with the package | survives, peak 271 MB | survives, peak 285 MB |
+
+Both packages are built from one set of shared sources, compiled once per ImageSharp major, and run
+the same test suite against each — so they cannot drift apart.
 
 ### Supported versions
 

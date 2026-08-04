@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Exercises the package on both supported runtimes. -->
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>Umbraco.Community.Imaging.ImageSharp2.Tests</AssemblyName>
+    <RootNamespace>Umbraco.Community.Imaging.ImageSharp2.Tests</RootNamespace>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Umbraco.Community.Imaging.ImageSharp2\Umbraco.Community.Imaging.ImageSharp2.csproj" />
+  </ItemGroup>
+
+  <!--
+    The same tests as the ImageSharp 3.x package, compiled against the ImageSharp 2.x build of the
+    shared sources. This is what stops the two packages diverging in behaviour.
+  -->
+  <ItemGroup>
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp.Tests\ImageProcessingThrottleMiddlewareTests.cs" Link="ImageProcessingThrottleMiddlewareTests.cs" />
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp.Tests\ImagingMemorySettingsTests.cs" Link="ImagingMemorySettingsTests.cs" />
+    <Compile Include="..\Umbraco.Community.Imaging.ImageSharp.Tests\ImagingMemoryComposerTests.cs" Link="ImagingMemoryComposerTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

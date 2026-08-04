@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Umbraco.Community.Imaging.ImageSharp/Umbraco.Community.Imaging.ImageSharp.csproj" />
+    <Project Path="src/Umbraco.Community.Imaging.ImageSharp2/Umbraco.Community.Imaging.ImageSharp2.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Umbraco.Community.Imaging.ImageSharp.Tests/Umbraco.Community.Imaging.ImageSharp.Tests.csproj" />
+    <Project Path="tests/Umbraco.Community.Imaging.ImageSharp2.Tests/Umbraco.Community.Imaging.ImageSharp2.Tests.csproj" />
   </Folder>
 </Solution>
