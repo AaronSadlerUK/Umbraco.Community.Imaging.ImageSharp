@@ -182,6 +182,31 @@ To reproduce the original problem against a real site:
    that are not yet in the media cache.
 4. Watch `docker stats`.
 
+## Releasing
+
+Publishing uses [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing),
+so no API key is stored in this repository. The workflow mints a GitHub OIDC token, and nuget.org
+exchanges it for a short-lived key.
+
+One-time setup:
+
+1. On nuget.org, under the package owner's account, add a **trusted publishing policy** for this
+   repository (owner `AaronSadlerUK`, repository `Umbraco.Community.Imaging.ImageSharp`, workflow
+   `release.yml`).
+2. In this repository's settings, add a **variable** (not a secret) named `NUGET_USER` set to the
+   nuget.org account name that owns the policy.
+
+To release:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The tag drives the package version — `v1.2.3` publishes `1.2.3`. `.github/workflows/release.yml`
+builds, tests, packs and pushes; `workflow_dispatch` runs everything except the push, so it can be
+used as a dry run.
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
