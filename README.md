@@ -162,7 +162,19 @@ ImageSharp.Web 3.2.0. Peak memory is read from `VmHWM` rather than sampled, so t
 race, and the split between managed heap, ImageSharp's unmanaged pool and C-allocator retention is
 measured separately.
 
-To reproduce against a real site:
+The package itself was then installed into a clean Umbraco 17.4.2 site and the throttle confirmed to
+sit in front of the imaging middleware, by timing four concurrent distinct crops against a single
+one:
+
+| `MaximumConcurrentProcessing` | four concurrent crops vs. one | |
+|---|---|---|
+| `1` | ×3.57, ×3.84 | serialised, as configured |
+| `8` | ×1.40, ×1.11 | parallel, as configured |
+
+Had the middleware been registered after `UseImageSharp()` rather than before it, both rows would
+read the same.
+
+To reproduce the original problem against a real site:
 
 1. Run Umbraco in Docker with `--memory=512m` on an Ubuntu-based `aspnet` image.
 2. Upload a few dozen 4000×3000 JPEGs to the media section.
