@@ -6,9 +6,11 @@ Stops Umbraco sites being OOM-killed in memory-limited containers while browsing
 
 > This is a backport of the fix proposed for the CMS in
 > [umbraco/Umbraco-CMS#23557](https://github.com/umbraco/Umbraco-CMS/pull/23557)
-> (issue [#23556](https://github.com/umbraco/Umbraco-CMS/issues/23556)), for Umbraco 17 sites that
-> need it before it ships in the product. **Remove this package once you are on an Umbraco version
-> that includes the fix** — see [Migrating off this package](#migrating-off-this-package).
+> (issue [#23556](https://github.com/umbraco/Umbraco-CMS/issues/23556), also proposed for
+> [v13](https://github.com/umbraco/Umbraco-CMS/pull/23559) and
+> [v18](https://github.com/umbraco/Umbraco-CMS/pull/23558)), for sites that need it before it ships
+> in the product. **Remove this package once you are on an Umbraco version that includes the fix** —
+> see [Migrating off this package](#migrating-off-this-package).
 
 ## The problem
 
@@ -100,8 +102,20 @@ dotnet add package Umbraco.Community.Imaging.ImageSharp
 
 That is all — the package composes itself. There is nothing to add to `Program.cs`.
 
-**Requires Umbraco 17.** Umbraco 18 and later are not supported by this package; the fix is
-expected to be in the product by then.
+### Supported versions
+
+| Umbraco | Target framework | Dependency range |
+|---------|------------------|------------------|
+| 13 (LTS) | `net8.0` | `[13.0.0, 14.0.0)` |
+| 17 | `net10.0` | `[17.0.0, 19.0.0)` |
+| 18 | `net10.0` | `[17.0.0, 19.0.0)` |
+
+All three ship SixLabors.ImageSharp 3.x and register imaging the same way, so one implementation
+covers every target.
+
+Umbraco 14, 15 and 16 are **not** supported. They fall on the `net8.0` asset but resolve an Umbraco
+major outside its dependency range, so restore fails loudly rather than installing something
+untested.
 
 ## Configuration
 
