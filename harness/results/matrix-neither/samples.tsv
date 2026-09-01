@@ -1,0 +1,6 @@
+phase	rssMB	peakRssMB	cgroupMB	gcHeapMB	gcCommitMB	isHandles	gen2	serverGC
+baseline	70	71	53	0	2	0	0	True
+b1-load+5s	DEAD						
+after-gc	DEAD						
+after-malloc-trim	DEAD						
+container: exited oomkilled=true exit=137

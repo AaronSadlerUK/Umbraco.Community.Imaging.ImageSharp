@@ -1,0 +1,10 @@
+phase	rssMB	peakRssMB	cgroupMB	gcHeapMB	gcCommitMB	isHandles	gen2	serverGC
+baseline	71	71	53	0	2	0	0	True
+b1-load+5s	266	266	349	40	42	10	72	True
+b1-load+10s	261	293	368	42	44	8	158	True
+b1-load+15s	199	295	333	43	45	4	203	True
+b1-idle+15s	199	295	331	43	45	4	203	True
+b1-idle+30s	199	295	331	43	45	4	203	True
+after-gc	188	295	321	34	34	4	207	True
+after-malloc-trim	168	295	300	34	34	4	207	True
+container: running oomkilled=false exit=0
