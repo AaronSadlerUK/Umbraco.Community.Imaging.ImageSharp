@@ -14,12 +14,14 @@ namespace Umbraco.Community.Imaging.ImageSharp;
 /// distinct thumbnails decodes every source at full resolution in parallel. Peak memory is then
 /// the number of concurrent requests multiplied by the size of a decoded source, which on a host
 /// with a hard memory limit is enough to have the process killed. Requests over the limit wait
-/// here instead.
+/// here instead. The gate engages only when memory is the binding constraint (see
+/// <see cref="ImagingMemorySettings.RequiresConcurrencyLimit" />); on any other host it steps
+/// aside so cache hits and other cheap requests are never made to wait.
 /// </remarks>
 public sealed class ImageProcessingThrottleMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly SemaphoreSlim _semaphore;
+    private readonly SemaphoreSlim? _semaphore;
     private readonly HashSet<string> _commands;
 
     /// <summary>
@@ -32,14 +34,31 @@ public sealed class ImageProcessingThrottleMiddleware
         RequestDelegate next,
         IOptions<ImagingMemorySettings> imagingMemorySettings,
         IEnumerable<IImageWebProcessor> processors)
+        : this(
+            next,
+            imagingMemorySettings,
+            processors,
+            GC.GetGCMemoryInfo().TotalAvailableMemoryBytes,
+            Environment.ProcessorCount)
+    {
+    }
+
+    internal ImageProcessingThrottleMiddleware(
+        RequestDelegate next,
+        IOptions<ImagingMemorySettings> imagingMemorySettings,
+        IEnumerable<IImageWebProcessor> processors,
+        long availableMemoryBytes,
+        int processorCount)
     {
         _next = next;
 
-        var maximumConcurrentProcessing = imagingMemorySettings.Value.ResolveMaximumConcurrentProcessing(
-            GC.GetGCMemoryInfo().TotalAvailableMemoryBytes,
-            Environment.ProcessorCount);
+        ImagingMemorySettings settings = imagingMemorySettings.Value;
+        if (settings.RequiresConcurrencyLimit(availableMemoryBytes, processorCount))
+        {
+            var maximumConcurrentProcessing = settings.ResolveMaximumConcurrentProcessing(availableMemoryBytes, processorCount);
+            _semaphore = new SemaphoreSlim(maximumConcurrentProcessing, maximumConcurrentProcessing);
+        }
 
-        _semaphore = new SemaphoreSlim(maximumConcurrentProcessing, maximumConcurrentProcessing);
         _commands = new HashSet<string>(processors.SelectMany(x => x.Commands), StringComparer.OrdinalIgnoreCase);
     }
 
@@ -50,7 +69,7 @@ public sealed class ImageProcessingThrottleMiddleware
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!IsProcessingRequest(context.Request))
+        if (_semaphore is null || !IsProcessingRequest(context.Request))
         {
             await _next(context);
             return;
